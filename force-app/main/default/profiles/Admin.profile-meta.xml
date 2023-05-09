@@ -584,6 +584,10 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Product2.Family</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Shelter__c.Animal__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -672,6 +676,14 @@
         <allowRead>true</allowRead>
         <modifyAllRecords>true</modifyAllRecords>
         <object>Product2</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>true</modifyAllRecords>
         <object>Shelter__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>

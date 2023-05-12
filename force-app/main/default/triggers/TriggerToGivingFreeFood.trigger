@@ -22,7 +22,9 @@ trigger TriggerToGivingFreeFood on Adoption__c (after insert) {
                 System.debug('Karma została przyznana');
             }
             
-            people.add(adp.Person__r);
+            if(!people.contains(adp.Person__r)){
+            	people.add(adp.Person__r);
+            }
         }
     }
     update people;

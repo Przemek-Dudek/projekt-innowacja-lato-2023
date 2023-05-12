@@ -155,7 +155,7 @@
     <externalSharingModel>Private</externalSharingModel>
     <label>Person</label>
     <nameField>
-        <label>Person Name</label>
+        <label>Name</label>
         <type>Text</type>
     </nameField>
     <pluralLabel>People</pluralLabel>

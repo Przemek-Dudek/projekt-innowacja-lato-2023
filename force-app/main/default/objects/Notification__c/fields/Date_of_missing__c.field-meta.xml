@@ -3,7 +3,7 @@
     <fullName>Date_of_missing__c</fullName>
     <externalId>false</externalId>
     <label>Date of missing</label>
-    <required>false</required>
+    <required>true</required>
     <trackTrending>false</trackTrending>
     <type>Date</type>
 </CustomField>

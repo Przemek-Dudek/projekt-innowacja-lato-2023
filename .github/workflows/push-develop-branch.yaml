@@ -7,8 +7,6 @@ on:
     branches: [ develop ]
   pull_request:
     branches: [ develop ]
-    paths:
-      - 'force-app/**'
 
 # Jobs to be executed
 jobs:

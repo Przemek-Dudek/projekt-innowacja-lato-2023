@@ -18,6 +18,8 @@
     <tabs>Adoption__c</tabs>
     <tabs>Person__c</tabs>
     <tabs>Notification__c</tabs>
+    <tabs>standard-report</tabs>
+    <tabs>standard-Dashboard</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>animal_shelter_app_UtilityBar</utilityBar>
 </CustomApplication>

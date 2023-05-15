@@ -3,11 +3,16 @@ name: Deploy integration branch to integration and staging/uat orgs
 
 # Definition when the workflow should run
 on:
-    push:
-      branches: [ integration ]
-      paths:
-        - 'force-app/**'
-            
+  push:
+    branches:
+      - develop
+    paths:
+      - 'force-app/**'
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'force-app/**'
 
 # Jobs to be executed
 jobs:

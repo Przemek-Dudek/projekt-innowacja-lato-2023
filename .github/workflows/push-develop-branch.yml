@@ -8,11 +8,11 @@ on:
       - develop
     paths:
       - 'force-app/**'
-  pull_request:
-    branches:
-      - develop
-    paths:
-      - 'force-app/**'
+  # pull_request:
+  #   branches:
+  #     - develop
+  #   paths:
+  #     - 'force-app/**'
 
 # Jobs to be executed
 jobs:
@@ -45,8 +45,7 @@ jobs:
             - name: 'Populate auth file with SFDX_URL secret of the integration and staging orgs'
               shell: bash
               run: |
-                  echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
-                  echo ${{ secrets.SFDX_STAGING_URL}} > ./SFDX_STAGING_URL.txt
+                  echo ${{ secrets.SFDX_AUTH_URL_INTA}} > ./SFDX_AUTH_URL_INTA.txt
 
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: | 
@@ -55,7 +54,7 @@ jobs:
 
             # Authenticate to org
             - name: 'Authenticate to Integration Org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a integration
+              run: sfdx auth:sfdxurl:store -f ./SFDX_AUTH_URL_INTA.txt -s -a integration
 
             - name: 'Deploy the entire branch to Integration org'
               run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
@@ -64,11 +63,11 @@ jobs:
               run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
 
             # Authenticate to org
-            - name: 'Authenticate to Staging Org to Staging org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_STAGING_URL.txt -s -a staging
+            # - name: 'Authenticate to Staging Org to Staging org'
+            #   run: sfdx auth:sfdxurl:store -f ./SFDX_STAGING_URL.txt -s -a staging
 
-            - name: 'Deploy the entire branch'
-              run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
+            # - name: 'Deploy the entire branch'
+            #   run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
 
-            - name: 'Deploy destructive changes (if any) to Staging org'
-              run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
+            # - name: 'Deploy destructive changes (if any) to Staging org'
+            #   run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings

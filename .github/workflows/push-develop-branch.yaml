@@ -7,6 +7,8 @@ on:
     branches: [ develop ]
   pull_request:
     branches: [ develop ]
+    paths:
+      - 'force-app/**'
 
 # Jobs to be executed
 jobs:
@@ -33,11 +35,11 @@ jobs:
               with:
                 fetch-depth: 0
 
-            # Store secret for both otgs
             - name: 'Populate auth file with SFDX_URL secret of the integration and staging orgs'
               shell: bash
               run: |
-                  echo ${{secrets.SFDX_AUTH_URL_INTA}} > ./SFDX_AUTH_URL_INTA.txt
+                  echo ${{ secrets.SFDX_AUTH_URL_INTA}} > ./SFDX_AUTH_URL_INTA.txt
+                  cat ./SFDX_AUTH_URL_INTA.txt
 
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: |

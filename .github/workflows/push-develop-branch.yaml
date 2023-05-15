@@ -45,6 +45,9 @@ jobs:
                   sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
 
             # Authenticate to org
+            - name: 'SFDX version'
+              run: sfdx --version
+
             - name: 'Authenticate to Integration Org'
               run: sfdx auth:sfdxurl:store -f ./PLIK_SFDX.txt -s -a integration
 

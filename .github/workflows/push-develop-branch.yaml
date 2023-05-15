@@ -36,8 +36,8 @@ jobs:
             - name: 'Populate auth file with SFDX_URL secret of the integration and staging orgs'
               shell: bash
               run: |
-                  echo ${{ secrets.SFDX_AUTH_URL_INTA}} > ./SFDX_AUTH_URL_INTA.txt
-                  cat ./SFDX_AUTH_URL_INTA.txt
+                  echo ${{ secrets.SFDX_AUTH_URL_INTA}} > ./PLIK_SFDX.txt
+                  cat ./PLIK_SFDX.txt
 
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: |
@@ -46,7 +46,7 @@ jobs:
 
             # Authenticate to org
             - name: 'Authenticate to Integration Org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_AUTH_URL_INTA.txt -s -a integration
+              run: sfdx auth:sfdxurl:store -f ./PLIK_SFDX.txt -s -a integration
 
             - name: 'Deploy the entire branch to Integration org'
               run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json

@@ -46,7 +46,7 @@ jobs:
 
             # Authenticate to org
             - name: 'SFDX version'
-              run: sfdx --version
+              run: sfdx version --verbose
 
             - name: 'Authenticate to Integration Org'
               run: sfdx auth:sfdxurl:store -f ./PLIK_SFDX.txt -s -a integration

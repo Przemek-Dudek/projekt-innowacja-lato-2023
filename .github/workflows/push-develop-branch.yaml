@@ -5,7 +5,7 @@ name: Deploy integration branch to integration and staging/uat orgs
 on:
   push:
     branches: [ develop ]
-  pull-request:
+  pull_request:
     branches: [ develop ]
 
 # Jobs to be executed

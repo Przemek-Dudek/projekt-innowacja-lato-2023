@@ -3,7 +3,6 @@ name: Validate PR on develop branch
 on:
   #workflow_dispatch:
   pull_request:
-    types: [opened, synchronize]
     branches: [ develop ]
     paths:
       - 'force-app/**'

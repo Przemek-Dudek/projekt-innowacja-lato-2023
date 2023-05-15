@@ -12,7 +12,6 @@ on:
 jobs:
     validate-deployment-on-develop-org:
         runs-on: ubuntu-latest
-        if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
             - uses: actions/setup-node@v3
               with:

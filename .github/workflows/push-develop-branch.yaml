@@ -8,17 +8,11 @@ on:
       - develop
     paths:
       - 'force-app/**'
-  # pull_request:
-  #   branches:
-  #     - develop
-  #   paths:
-  #     - 'force-app/**'
 
 # Jobs to be executed
 jobs:
     deploy-branch-to-int-and-staging-orgs:
         runs-on: ubuntu-latest
-        if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
             # Install Salesforce CLI
             - name: 'Install Salesforce CLI'
@@ -30,7 +24,7 @@ jobs:
                   ~/sfdx/bin/sfdx version
 
             - name: 'Installing sfdx git delta'
-              run: | 
+              run: |
                   echo y | sfdx plugins:install sfdx-git-delta
                   sfdx plugins 
 
@@ -47,7 +41,7 @@ jobs:
                   echo ${{ secrets.SFDX_AUTH_URL_INTA}} > ./SFDX_AUTH_URL_INTA.txt
 
             - name: 'Create delta packages for new, modified or deleted metadata'
-              run: | 
+              run: |
                   mkdir changed-sources
                   sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
 

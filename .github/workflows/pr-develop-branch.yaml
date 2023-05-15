@@ -1,13 +1,12 @@
-# Unique name for this workflow
 name: Validate PR on develop branch
 
-# Definition when the workflow should run
 on:
-  pull_request:
-    types: [opened, synchronize]
-    branches: [ develop ]
-    paths:
-      - 'force-app/**'
+  workflow_dispatch;
+  # pull_request:
+  #   types: [opened, synchronize]
+  #   branches: [ develop ]
+  #   paths:
+  #     - 'force-app/**'
             
 
 jobs:
@@ -15,7 +14,6 @@ jobs:
         runs-on: ubuntu-latest
         if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
-            # Now we install nodejs in the VM, and specify version 14
             - uses: actions/setup-node@v3
               with:
                 node-version: '14'
@@ -24,18 +22,7 @@ jobs:
               uses: actions/checkout@v3
               with:
                 fetch-depth: 0
-            
-            - name: 'Read PR Body'
-              env:
-                PR_BODY: ${{github.event.pull_request.body}}
-
-              run: |
-                  echo $PR_BODY > ./pr_body.txt
-                  node ./parsePR.js              
-                  TESTS=$(cat testsToRun.txt)       
-                  echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
                   
-            # Now Install Salesforce CLI
             - name: 'Install Salesforce CLI'
               run: |
                   wget https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
@@ -45,7 +32,7 @@ jobs:
                   ~/sfdx/bin/sfdx version
 
             - name: 'Installing sfdx git delta'
-              run: | 
+              run: |
                   echo y | sfdx plugins:install sfdx-git-delta
                   sfdx plugins 
 
@@ -54,40 +41,27 @@ jobs:
                 sudo apt-get update
                 sudo apt install default-jdk
 
-            # Install SFDX scanner
             - name: 'Installing SFDX scanner'
               run: sfdx plugins:install @salesforce/sfdx-scanner
 
             - name: 'Populate auth file with SFDX_URL secret of integration org'
               shell: bash
               run: |
-                  echo ${{ secrets.SFDX_AUTH_URL_INTA}} > ./SFDX_AUTH_URL_INTA.txt
+                  echo ${{secrets.SFDX_AUTH_URL_INTA}} > ./SFDX_AUTH_URL_INTA.txt
 
-            # Authenticate to org using the URL stored in the text file
             - name: 'Authenticate to Integration Org'
               run: sfdx auth:sfdxurl:store -f ./SFDX_AUTH_URL_INTA.txt -s -a integration
 
-            # We use SFDX Git Delta to create a directory with only the metadata that has changed.
-            # this allows us to deploy only those changes, as opposed to deploying the entire branch. 
-            # This helps reducing deployment times
             - name: 'Create delta packages for new, modified or deleted metadata'
-              run: | 
+              run: |
                   mkdir changed-sources
                   sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/ 
-
-            # Now we can use the sfdx scanner to scan the code in the delta directory
-            # The output of the scan is stored in a file called apexScanResults.sarif
-
-            # The .sarif file can later be uploaded to github, so that we can see the 
-            # results of the scan directly from the PR.
 
             - name: 'Scan code'
               run: |
                   cd changed-sources
                   sfdx scanner:run --format sarif --target './**/*.cls' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'  
                   cd ..
-
-            # Now we upload the .sarif file as explained in the previous step
             - name: Upload SARIF file
               uses: github/codeql-action/upload-sarif@v1
               with:

@@ -13,47 +13,9 @@ jobs:
     deploy-branch-to-int:
         runs-on: ubuntu-latest
         steps:
-            # Install Salesforce CLI
-            - name: 'Install Salesforce CLI'
-              run: |
-                  wget https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
-                  mkdir ~/sfdx
-                  tar xJf sfdx-linux-x64.tar.xz -C ~/sfdx --strip-components 1
-                  echo "$HOME/sfdx/bin" >> $GITHUB_PATH
-                  ~/sfdx/bin/sfdx version
-
-            - name: 'Installing sfdx git delta'
-              run: |
-                  echo y | sfdx plugins:install sfdx-git-delta
-                  sfdx plugins 
-
-            # Checkout the source code
-            - name: 'Checkout source code'
-              uses: actions/checkout@v3
-              with:
-                fetch-depth: 0
-
-            - name: 'Populate auth file with SFDX_URL secret of the integration and staging orgs'
-              shell: bash
-              run: |
-                  echo $INTA > ./PLIK_SFDX.txt
-                  cat ./PLIK_SFDX.txt
-              env:
-                INTA: ${{ secrets.SFDX_AUTH_URL_INTA}}
-
-            - name: 'Create delta packages for new, modified or deleted metadata'
-              run: |
-                  mkdir changed-sources
-                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
-
-            - name: 'SFDX version'
-              run: sfdx version --verbose
-
-            - name: 'Authenticate to Integration Org'
-              run: sfdx auth:sfdxurl:store -f ./PLIK_SFDX.txt -s -a integration
-
-            - name: 'Deploy the entire branch to Integration org'
-              run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
-
-            - name: 'Deploy destructive changes (if any) to Integration org'
-              run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings 
+          - uses: sfdx-actions/setup-sfdx@v1
+            with:
+              sfdx-auth-url: ${{ secrets.SFDX_AUTH_URL_INTA }}
+          # - name: sfdx-test-run
+          #   run: sfdx force:apex:test:run -l RunLocalTests -w 30
+              

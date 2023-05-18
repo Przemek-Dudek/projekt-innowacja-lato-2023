@@ -68,11 +68,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Notification__c.Date_of_missing__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Notification__c.Place_of_missing__c</field>
         <readable>false</readable>
     </fieldPermissions>

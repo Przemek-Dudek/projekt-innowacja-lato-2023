@@ -6,7 +6,6 @@ on:
     paths: [force-app/**]
   pull_request:
     branches: [ develop ]
-    paths: [force-app/**]
 
 jobs:
   deploy-branch-to-int-and-staging-orgs:

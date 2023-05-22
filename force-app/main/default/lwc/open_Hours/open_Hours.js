@@ -7,11 +7,7 @@ export default class Open_Hours extends LightningElement {
 
     @wire(showHours, {shelterID: '$recordId'})
     wiredAccount({ error, data }) {
-        console.log("ID record: " +this.recordId)
-        console.log("data: " + data)
-        console.log("error: " + JSON.stringify(error))
         if (data) {
-            console.log("data: " + data)
             this.hour = data;
         } else if (error) {
             console.error(error);

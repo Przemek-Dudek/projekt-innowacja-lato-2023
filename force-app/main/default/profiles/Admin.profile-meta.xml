@@ -7,6 +7,11 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>false</editable>
+        <field>Adoption__c.Contact__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <field>Adoption__c.Status__c</field>
         <readable>true</readable>
@@ -83,12 +88,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Shelter__c.Name</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Shelter__c.Time_Opened__c</field>
+        <field>Shelter__c.Animal__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <objectPermissions>

@@ -1,17 +1,12 @@
 name: "[Deploy] Deploy changes to SF org"
 
 on:
-  
   push:
-    branches:
-      - "develop"
-    paths:
-      - "force-app/**"
+    branches: [ develop ]
+    paths: [force-app/**]
   pull_request:
-    branches:
-      - "develop"
-    paths:
-      - "force-app/**"
+    branches: [ develop ]
+    paths: [force-app/**]
 
 jobs:
   deploy-branch-to-int-and-staging-orgs:

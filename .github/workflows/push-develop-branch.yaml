@@ -12,7 +12,6 @@ on:
       - "develop"
     paths:
       - "force-app/**"
-  workflow_dispatch:
 
 jobs:
   deploy-branch-to-int-and-staging-orgs:

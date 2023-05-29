@@ -8,23 +8,15 @@ import getShelters from '@salesforce/apex/mapOfSheltersController.getShelters'
 export default class LightningMapExample extends LightningElement {
     @api recordId;
     mapMarkers = [];
-
-    jakasNazwa = [];
     
+
 
 
     @wire(getShelters, {})
     wiredAccount({ error, data }) {
         if (data) {
         
-            console.log(data);
-            console.log("------------------------")
-            // data.forEach((element) => {
-            //     console.log(element.City__c);
-            //     this.mapMarkers.push({location:{City: element.City__c, Country: element.Country__c, PostalCode: element.PostalCode__c, Street: element.Street__c},title: element.Name})
-            // });
-            // console.log("------------------------")
-            // console.log(mapMarkers);
+            
 
             this.mapMarkers = data.map(element => {
                 return {
@@ -38,9 +30,7 @@ export default class LightningMapExample extends LightningElement {
                 };
               });
 
-            // this.jakasNazwa = data;
-            console.log(this.mapMarkers);
-            // console.log("------------------------");
+
 
         } 
         else if (error) {

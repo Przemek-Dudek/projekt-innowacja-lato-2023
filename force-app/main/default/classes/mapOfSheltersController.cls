@@ -3,4 +3,5 @@ public with sharing class mapOfSheltersController {
     public static List<Shelter__c> getShelters() {
         return [Select Name,Country__c,City__c,PostalCode__c,Street__c From Shelter__c];
     } 
+    
 }

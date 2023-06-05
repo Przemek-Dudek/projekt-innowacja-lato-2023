@@ -9,11 +9,39 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Required</behavior>
+                <field>Localization__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>Time_Opened__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>Time_Opened_in_Weekend__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
                 <field>Name</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Animal__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>Country__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>City__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>PostalCode__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>Street__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -53,6 +81,11 @@
         <layoutColumns/>
         <style>CustomLinks</style>
     </layoutSections>
+    <miniLayout>
+        <fields>Localization__c</fields>
+        <fields>Time_Opened__c</fields>
+        <fields>Time_Opened_in_Weekend__c</fields>
+    </miniLayout>
     <relatedLists>
         <fields>NAME</fields>
         <relatedList>Animal__c.Shelter__c</relatedList>

@@ -8,7 +8,6 @@ export default class NumberOfAdoptions extends LightningElement {
     @api recordId;
     number;
 
-
     @wire(get, { objectID: '$recordId'})
     wiredAccount({ error, data }) {
         if (data) {

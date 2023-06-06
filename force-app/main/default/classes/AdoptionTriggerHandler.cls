@@ -33,7 +33,7 @@ public with sharing class AdoptionTriggerHandler {
         update shelters;
     }
 
-    public static void UpdateNumbTriggerToGivingFreeFooderOfAdoptions(List<Adoption__c> newAdoptions, Map<Id, Adoption__c> oldAdoptions) {
+    public static void TriggerToGivingFreeFood(List<Adoption__c> newAdoptions) {
         List<Person__c> people = new List<Person__c>();    
         for(Adoption__c adp : [SELECT RecordType.Name, Person__r.Points__c From Adoption__c where Id IN : newAdoptions])
         {
@@ -61,50 +61,48 @@ public with sharing class AdoptionTriggerHandler {
         update people;
     }
 
-    public static void UpdateNumberOfAvailableAdoptions(List<Adoption__c> newAdoptions, Map<Id, Adoption__c> oldAdoptions) {
+    public static void UpdateNumberOfAvailableAdoptions(List<Adoption__c> newAdoptions, Map<Id, Adoption__c> oldAdoptions, Integer option) {
         List<Adoption__c> adoptions;
     
-        if(trigger.isdelete) {
+        if(option == 1) {
             adoptions = new List<Adoption__c>([SELECT Status__c, Animal__r.Shelter__c, Amount__c, RecordType.DeveloperName 
                 FROM Adoption__c 
-                WHERE Id IN: oldAdoptions]);
+                WHERE Id IN :oldAdoptions.keySet()]);
         } else {
             adoptions = new List<Adoption__c>([SELECT Status__c, Animal__r.Shelter__c, Amount__c, RecordType.DeveloperName 
                 FROM Adoption__c 
-                WHERE Id IN: newAdoptions]);
+                WHERE Id IN :newAdoptions]);
         }
         
-        Set<Id> SheltersId = new Set<Id>();
+        Set<Id> sheltersId = new Set<Id>();
         
         for(Adoption__c a: adoptions) {
-            SheltersId.add(a.Animal__r.Shelter__c);
+            sheltersId.add(a.Animal__r.Shelter__c);
         }
-
-        List<Shelter__c> existingShelters = new List<Shelter__c>();
-        
-        existingShelters.addAll([SELECT Id, Number_Of_Unadopted_Animals__c FROM Shelter__c WHERE Id IN: SheltersId]);
+    
+        List<Shelter__c> existingShelters = [SELECT Id, Number_Of_Unadopted_Animals__c FROM Shelter__c WHERE Id IN :sheltersId];
         
         for (Adoption__c a : adoptions) {
-            if(a.Status__c == 'In progress' && a.RecordType.DeveloperName == 'Virtual' && !trigger.isdelete) {
+            if(a.Status__c == 'In progress' && a.RecordType.DeveloperName == 'Virtual' && option == 3) {
                 for(Shelter__c s: existingShelters) {
                     if(s.Id == a.Animal__r.Shelter__c) {
-                        s.Number_Of_Unadopted_Animals__c +=1;
+                        s.Number_Of_Unadopted_Animals__c += 1;
                     }
                 }
             }
             
-            if(a.Status__c == 'Approved' && a.RecordType.DeveloperName == 'Virtual' && trigger.isupdate) {
+            if(a.Status__c == 'Approved' && a.RecordType.DeveloperName == 'Virtual' && option == 2) {
                 for(Shelter__c s: existingShelters) {
                     if(s.Id == a.Animal__r.Shelter__c) {
-                        s.Number_Of_Unadopted_Animals__c -=1;
+                        s.Number_Of_Unadopted_Animals__c -= 1;
                     }
                 }
             }
             
-            if(a.Status__c == 'In progress' && a.RecordType.DeveloperName == 'Virtual' && trigger.isdelete) {
+            if(a.Status__c == 'In progress' && a.RecordType.DeveloperName == 'Virtual' && option == 1) {
                 for(Shelter__c s: existingShelters) {
                     if(s.Id == a.Animal__r.Shelter__c) {
-                        s.Number_Of_Unadopted_Animals__c -=1;
+                        s.Number_Of_Unadopted_Animals__c -= 1;
                     }
                 }
             }

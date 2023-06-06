@@ -1,4 +1,4 @@
-trigger UpdateNumberOfAdoptions on Adoption__c (after update, after insert, after delete) {
+trigger UpdateNumberOfAvailableAdoptions on Adoption__c (after update, after insert, after delete) {
     
     List<Adoption__c> adoptions = new List<Adoption__c>([SELECT Status__c, Animal__r.Shelter__c, Amount__c, RecordType.DeveloperName FROM Adoption__c WHERE Id IN :Trigger.new]);
     Set<Id> SheltersId = new Set<Id>();

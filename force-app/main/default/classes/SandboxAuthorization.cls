@@ -1,10 +1,13 @@
 public class SandboxAuthorization {
+    private static String token='';
+    private static integer licznik=0;
     public static String getAccessToken() {
         String loginUrl = 'https://login.salesforce.com/services/oauth2/token';
 
         HttpRequest req = new HttpRequest();
         req.setEndpoint(loginUrl);
         req.setMethod('POST');
+        req.setHeader('Content-Type','application/x-www-form-urlencoded');
 
         String requestBody = 'grant_type=password&'
             + 'client_id=3MVG9QV5z8XnLDvwzWOhGIwhTEmMWXYtxhVrgQ9jAvVUMqXUBi2Hai0bojZp3n.4Yz2qpjn.fOB9l2YRJCdzc&'
@@ -27,20 +30,24 @@ public class SandboxAuthorization {
         if (res.getStatusCode() == 200) {
             Map<String, Object> responseMap = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
             String accessToken = (String) responseMap.get('access_token');
-            //System.debug(EncodingUtil.base64Encode(Blob.valueOf(accessToken)));
             return accessToken;
         } else {
             System.debug('Error during access token retrieval. Status code: ' + res.getStatusCode());
             return null;
         }
     }
-    
-    
-    
-    public static String getAnimalIds() {        
-        String token = EncodingUtil.base64Encode(Blob.valueOf(SandboxAuthorization.getAccessToken()));
-        String endpoint = 'https://craftwarestudents--aimalsint.my.salesforce.com/services/apexrest/MissingAnimals';
+
+    public static List<String> getAnimalIds(integer day) {        
+        token = SandboxAuthorization.getAccessToken();
+        String endpoint;
+        if(day == 0) {
+            endpoint = 'https://cw-inn.my.salesforce.com/services/apexrest/MissingAnimals?dayDelta=900&groupId=G1';
+        } else {
+            endpoint = 'https://cw-inn.my.salesforce.com/services/apexrest/MissingAnimals?dayDelta=' + String.valueOf(day) + '&groupId=G1';
+        }
         
+        
+
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         
@@ -50,12 +57,53 @@ public class SandboxAuthorization {
         
         HttpResponse response = http.send(request);
         
+        List<String> idList = new List<String>();
         if (response.getStatusCode() == 200) {
-            //System.debug('Siedzi ---->' + response.getBody() + '<----');
-            return response.getBody();
+            String idText = response.getBody();
+            idText = idText.substring(2,idText.length()-2);
+            String cleanText = idText.replaceAll('[\\\\"]', '');
+            
+            idList = cleanText.split(',');
         } else {
             String errorMessage = 'Wystąpił błąd: ' + response.getStatusCode();
-            return errorMessage;
+            idList.add(errorMessage);
+        }
+        return idList;
+    }
+    
+
+
+    
+    public static String getAnimalPhotoURL(String animalId) {
+        String endpoint = 'https://cw-inn.my.salesforce.com/services/apexrest/MissingAnimals/' + animalId;
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        
+        request.setEndpoint(endpoint);
+        request.setMethod('GET');
+        request.setHeader('Authorization', 'Bearer ' + token);
+        
+        HttpResponse response = http.send(request);     
+        licznik++;
+        if (response.getStatusCode() == 200) {
+        	return response.getBody();
+        } else {
+		    System.debug('Error during access token retrieval. Status code: ' + response.getStatusCode());
+            System.debug('wartosc licznika: ' + licznik);
+            return null;
+
         }
     }
+    
+    public static Map<String, String> getAllAnimalPhotos(integer day) {
+        Map<String, String> photosMap = new Map<String, String>();
+        for(String singleId : SandboxAuthorization.getAnimalIds(day)) {
+            String photoURL = getAnimalPhotoURL(singleId);
+            if(photoURL != null)
+                photosMap.put(singleId, photoURL);
+        }
+		
+        return photosMap;
+    }
+
 }

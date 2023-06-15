@@ -1,4 +1,5 @@
-public class SandboxAuthorization {
+public with sharing class SandboxAuthorization {
+    
     private static String token='';
     public static String getAccessToken() {
         String loginUrl = 'https://login.salesforce.com/services/oauth2/token';
@@ -38,35 +39,13 @@ public class SandboxAuthorization {
     
     public static List<String> getAnimalIds(integer day) {        
         token = SandboxAuthorization.getAccessToken();
-        String endpoint = 'https://cw-inn.my.salesforce.com/services/apexrest/MissingAnimals?dayDelta=' + String.valueOf(day) + '&groupId=G1';
-        
-        Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        
-        request.setEndpoint(endpoint);
-        request.setMethod('GET');
-        request.setHeader('Authorization', 'Bearer ' + token);
-        
-        HttpResponse response = http.send(request);
-        
-        List<String> idList = new List<String>();
-        if (response.getStatusCode() == 200) {
-            String idText = response.getBody();
-            idText = idText.substring(2,idText.length()-2);
-            String cleanText = idText.replaceAll('[\\\\"]', '');
-            
-            idList = cleanText.split(',');
-        } else {
-            String errorMessage = 'Wystąpił błąd: ' + response.getStatusCode();
-            idList.add(errorMessage);
-        }
-        return idList;
-    }
+        String endpoint;
 
-    public static List<String> getAnimalIds() {        
-        token = SandboxAuthorization.getAccessToken();
-        String endpoint = 'https://cw-inn.my.salesforce.com/services/apexrest/MissingAnimals?groupId=G1';
-
+        if(day == 0)
+            endpoint = 'https://cw-inn.my.salesforce.com/services/apexrest/MissingAnimals?groupId=G1';
+        else
+            endpoint = 'https://cw-inn.my.salesforce.com/services/apexrest/MissingAnimals?dayDelta=' + String.valueOf(day) + '&groupId=G1';
+        
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         
@@ -110,6 +89,7 @@ public class SandboxAuthorization {
         }
     }
     
+    @AuraEnabled(Cacheable = true)
     public static Map<String, String> getAllAnimalPhotos(integer day) {
         Map<String, String> photosMap = new Map<String, String>();
         for(String singleId : SandboxAuthorization.getAnimalIds(day)) {
@@ -121,15 +101,5 @@ public class SandboxAuthorization {
         return photosMap;
     }
     
-    public static Map<String, String> getAllAnimalPhotos() {
-        Map<String, String> photosMap = new Map<String, String>();
-        for(String singleId : SandboxAuthorization.getAnimalIds()) {
-            String photoURL = getAnimalPhotoURL(singleId);
-            if(photoURL != null)
-                photosMap.put(singleId, photoURL);
-        }
-		
-        return photosMap;
-    }
 
 }

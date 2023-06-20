@@ -11,11 +11,11 @@ export default class GetDayDelta extends LightningElement {
   }
 
   @wire(getAllAnimalPhotos, { day: '$amount' })
-  wiredAccount({ error, data }) {
+  wiredAnimals({ error, data }) {
     if (data) {
       const parsedData = JSON.parse(JSON.stringify(data));
       this.mapaData = new Map(Object.entries(parsedData));
-      this.mappedData = Array.from(this.mapaData, ([key, value]) => ({ key, value }));
+      this.mappedData = Array.from(this.mapaData, ([key, value]) => ({ key, value: value.slice(1,-1) }));
     } else if (error) {
       console.log(error);
     }

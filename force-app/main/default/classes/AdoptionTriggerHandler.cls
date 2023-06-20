@@ -67,11 +67,11 @@ public with sharing class AdoptionTriggerHandler {
         if(trigger.isdelete) {
             adoptions = new List<Adoption__c>([SELECT Status__c, Animal__r.Shelter__c, Amount__c, RecordType.DeveloperName 
                 FROM Adoption__c 
-                WHERE Id IN: Trigger.old]);
+                WHERE Id IN: oldAdoptions]);
         } else {
             adoptions = new List<Adoption__c>([SELECT Status__c, Animal__r.Shelter__c, Amount__c, RecordType.DeveloperName 
                 FROM Adoption__c 
-                WHERE Id IN: Trigger.new]);
+                WHERE Id IN: newAdoptions]);
         }
         
         Set<Id> SheltersId = new Set<Id>();
@@ -85,7 +85,7 @@ public with sharing class AdoptionTriggerHandler {
         List<Shelter__c> updatedShelters = new List<Shelter__c>();
         
         for (Adoption__c a : adoptions) {
-             if(a.Status__c == 'In progress' && a.RecordType.DeveloperName == 'Virtual' && !trigger.isdelete) {
+             if(a.Status__c == 'In progress' && a.RecordType.DeveloperName == 'Virtual' && option != 1) {
                  if(loadedShelters.containsKey(a.Animal__r.Shelter__c)) {
                       Shelter__c s = loadedShelters.get(a.Animal__r.Shelter__c);
                       s.Number_Of_Unadopted_Animals__c +=1;
@@ -93,7 +93,7 @@ public with sharing class AdoptionTriggerHandler {
                  }
              }
              
-             if(a.Status__c == 'Approved' && a.RecordType.DeveloperName == 'Virtual' && trigger.isupdate) {
+             if(a.Status__c == 'Approved' && a.RecordType.DeveloperName == 'Virtual' && option == 2) {
                  if(loadedShelters.containsKey(a.Animal__r.Shelter__c)) {
                       Shelter__c s = loadedShelters.get(a.Animal__r.Shelter__c);
                       s.Number_Of_Unadopted_Animals__c -=1;
@@ -101,7 +101,7 @@ public with sharing class AdoptionTriggerHandler {
                  }
              }
              
-             if(a.Status__c == 'In progress' && a.RecordType.DeveloperName == 'Virtual' && trigger.isdelete) {
+             if(a.Status__c == 'In progress' && a.RecordType.DeveloperName == 'Virtual' && option == 1) {
                  if(loadedShelters.containsKey(a.Animal__r.Shelter__c)) {
                       Shelter__c s = loadedShelters.get(a.Animal__r.Shelter__c);
                       s.Number_Of_Unadopted_Animals__c -=1;

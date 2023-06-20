@@ -71,7 +71,7 @@ public with sharing class AdoptionTriggerHandler {
         } else {
             adoptions = new List<Adoption__c>([SELECT Status__c, Animal__r.Shelter__c, Amount__c, RecordType.DeveloperName 
                 FROM Adoption__c 
-                WHERE Id IN: newAdoptions.keySet()]);
+                WHERE Id IN: newAdoptions]);
         }
         
         Set<Id> SheltersId = new Set<Id>();

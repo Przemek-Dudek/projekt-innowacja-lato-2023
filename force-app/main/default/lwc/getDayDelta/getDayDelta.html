@@ -1,0 +1,10 @@
+<template>
+    <lightning-card>
+    <lightning-input onchange={handleAmountChange} type="number" name="input" required value="1" label="Podaj liczbę dni od zaginięcia zwierzaka" min = "1" max="800"></lightning-input>
+    <div class="container">
+      <template for:each={mappedData} for:item="entry">
+        <div class="box" key={entry.key}><img src={entry.value} /></div>
+      </template>
+    </div>
+    </lightning-card>
+</template>

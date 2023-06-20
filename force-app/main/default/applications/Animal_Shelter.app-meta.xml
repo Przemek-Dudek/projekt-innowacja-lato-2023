@@ -14,6 +14,7 @@
     <label>Animal Shelter</label>
     <navType>Standard</navType>
     <tabs>Shelter_App_Page</tabs>
+    <tabs>Missing_Animals</tabs>
     <tabs>Shelter__c</tabs>
     <tabs>Animal__c</tabs>
     <tabs>Adoption__c</tabs>

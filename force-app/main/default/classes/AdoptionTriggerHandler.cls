@@ -64,14 +64,14 @@ public with sharing class AdoptionTriggerHandler {
     public static void UpdateNumberOfAvailableAdoptions(List<Adoption__c> newAdoptions, Map<Id, Adoption__c> oldAdoptions, Integer option) {
         List<Adoption__c> adoptions;
     
-        if(trigger.isdelete) {
+        if(option == 1) {
             adoptions = new List<Adoption__c>([SELECT Status__c, Animal__r.Shelter__c, Amount__c, RecordType.DeveloperName 
                 FROM Adoption__c 
-                WHERE Id IN: oldAdoptions]);
+                WHERE Id IN: oldAdoptions.keySet()]);
         } else {
             adoptions = new List<Adoption__c>([SELECT Status__c, Animal__r.Shelter__c, Amount__c, RecordType.DeveloperName 
                 FROM Adoption__c 
-                WHERE Id IN: newAdoptions]);
+                WHERE Id IN: newAdoptions.keySet()]);
         }
         
         Set<Id> SheltersId = new Set<Id>();

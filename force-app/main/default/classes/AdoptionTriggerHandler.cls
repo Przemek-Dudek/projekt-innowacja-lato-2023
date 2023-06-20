@@ -67,47 +67,49 @@ public with sharing class AdoptionTriggerHandler {
         if(option == 1) {
             adoptions = new List<Adoption__c>([SELECT Status__c, Animal__r.Shelter__c, Amount__c, RecordType.DeveloperName 
                 FROM Adoption__c 
-                WHERE Id IN :oldAdoptions.keySet()]);
+                WHERE Id IN: oldAdoptions.keySet()]);
         } else {
             adoptions = new List<Adoption__c>([SELECT Status__c, Animal__r.Shelter__c, Amount__c, RecordType.DeveloperName 
                 FROM Adoption__c 
-                WHERE Id IN :newAdoptions]);
+                WHERE Id IN: newAdoptions]);
         }
         
-        Set<Id> sheltersId = new Set<Id>();
+        Set<Id> SheltersId = new Set<Id>();
         
         for(Adoption__c a: adoptions) {
-            sheltersId.add(a.Animal__r.Shelter__c);
+            SheltersId.add(a.Animal__r.Shelter__c);
         }
-    
-        List<Shelter__c> existingShelters = [SELECT Id, Number_Of_Unadopted_Animals__c FROM Shelter__c WHERE Id IN :sheltersId];
+        
+        Map<ID, Shelter__c> loadedShelters = new Map<ID, Shelter__c>([SELECT Id, Number_Of_Unadopted_Animals__c FROM Shelter__c WHERE Id IN: SheltersId]);
+        
+        List<Shelter__c> updatedShelters = new List<Shelter__c>();
         
         for (Adoption__c a : adoptions) {
-            if(a.Status__c == 'In progress' && a.RecordType.DeveloperName == 'Virtual' && option == 3) {
-                for(Shelter__c s: existingShelters) {
-                    if(s.Id == a.Animal__r.Shelter__c) {
-                        s.Number_Of_Unadopted_Animals__c += 1;
-                    }
-                }
-            }
-            
-            if(a.Status__c == 'Approved' && a.RecordType.DeveloperName == 'Virtual' && option == 2) {
-                for(Shelter__c s: existingShelters) {
-                    if(s.Id == a.Animal__r.Shelter__c) {
-                        s.Number_Of_Unadopted_Animals__c -= 1;
-                    }
-                }
-            }
-            
-            if(a.Status__c == 'In progress' && a.RecordType.DeveloperName == 'Virtual' && option == 1) {
-                for(Shelter__c s: existingShelters) {
-                    if(s.Id == a.Animal__r.Shelter__c) {
-                        s.Number_Of_Unadopted_Animals__c -= 1;
-                    }
-                }
-            }
+             if(a.Status__c == 'In progress' && a.RecordType.DeveloperName == 'Virtual' && option != 1) {
+                 if(loadedShelters.containsKey(a.Animal__r.Shelter__c)) {
+                      Shelter__c s = loadedShelters.get(a.Animal__r.Shelter__c);
+                      s.Number_Of_Unadopted_Animals__c +=1;
+                      updatedShelters.add(s);
+                 }
+             }
+             
+             if(a.Status__c == 'Approved' && a.RecordType.DeveloperName == 'Virtual' && option == 2) {
+                 if(loadedShelters.containsKey(a.Animal__r.Shelter__c)) {
+                      Shelter__c s = loadedShelters.get(a.Animal__r.Shelter__c);
+                      s.Number_Of_Unadopted_Animals__c -=1;
+                      updatedShelters.add(s);
+                 }
+             }
+             
+             if(a.Status__c == 'In progress' && a.RecordType.DeveloperName == 'Virtual' && option == 1) {
+                 if(loadedShelters.containsKey(a.Animal__r.Shelter__c)) {
+                      Shelter__c s = loadedShelters.get(a.Animal__r.Shelter__c);
+                      s.Number_Of_Unadopted_Animals__c -=1;
+                      updatedShelters.add(s);
+                 }
+             }
         }
-        update existingShelters;
+        update updatedShelters;
     }
 
 

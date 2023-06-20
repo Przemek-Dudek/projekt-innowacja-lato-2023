@@ -4,6 +4,7 @@ trigger UpdateNumberOfAvailableAdoptions on Adoption__c (after update, after ins
         option = 1;
     } else if(trigger.isUpdate) {
         option = 2;
+        AdoptionTriggerHandler.UpdateNumberOfAdoptions(Trigger.new, Trigger.oldMap);
     } else {
         option = 3;
     }

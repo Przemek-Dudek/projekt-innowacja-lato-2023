@@ -104,6 +104,7 @@ public with sharing class SandboxAuthorization {
 
     public static String getAllAnimals() {        
         token = SandboxAuthorization.getAccessToken();
+        //String endpoint = 'https://cw-inn.my.salesforce.com/services/data/v56.0/sobjects/animal__c';
 
         String endpoint = 'https://cw-inn.my.salesforce.com/services/data/v56.0/query/?q=SELECT+name,Breed__c,PhotoUrl__c+from+Animal__c';
         Http http = new Http();
@@ -142,7 +143,7 @@ public with sharing class SandboxAuthorization {
             String type = (String) attributesMap.get('type');
             String url = (String) attributesMap.get('url');
             String name = (String) recordMap.get('Name');
-            String photo = (String) recordMap.get('imageUrl');
+            String photo = (String) recordMap.get('PhotoUrl__c');
             String breed = (String) recordMap.get('Breed__c');
             animals.add(new Animal__c(Name = name, Breed__c=breed, Photo__c=photo, Shelter__c='a065r000003ct50AAA'));
         }

@@ -1,24 +1,21 @@
 <template>
     <lightning-card title="Animal Search App" icon-name="custom:custom14">
         <div class="slds-m-around_medium">
-            <lightning-input type="text" label="Shelter" onchange={handleShelterChange}></lightning-input>
-            <lightning-input type="text" label="Breed" onchange={handleBreedChange}></lightning-input>
-            <lightning-input type="number" label="Age" onchange={handleAgeChange}></lightning-input>
+            <lightning-combobox name="shelter" label="Shelter" value={shelter} placeholder="Select Shelter" options={shelterOptions} onchange={handleShelterChange}> </lightning-combobox>
+            <lightning-combobox name="breed" label="Breed" value={breed} placeholder="Select Breed" options={breedOptions} onchange={handleBreedChange}> </lightning-combobox>
             <lightning-combobox name="gender" label="Gender" value={gender} placeholder="Select Gender" options={genderOptions} onchange={handleGenderChange}> </lightning-combobox>
-            <lightning-input type="file" label="Animal image" onchange={handleFileChange} accept=".jpg, .png"></lightning-input>
-            <lightning-button variant="brand" label="Search" title="Search" onclick={handleSearch} class="slds-m-left_x-small"></lightning-button>
+            <lightning-combobox name="age" label="Age" value={age} placeholder="Select Age" options={ageOptions} onchange={handleAgeChange}> </lightning-combobox>
+            <!-- <lightning-button variant="brand" label="Search" title="Search" onclick={handleSearch} class="slds-m-left_x-small"></lightning-button> -->
         </div>
-        <template for:each={animals} for:item="animal">
+        <template for:each={animalsFilter} for:item="animal">
             <lightning-card key={animal.Id}>
                 <lightning-layout>
                     <lightning-layout-item flexibility="auto" padding="around-small">
-                        <img src={animal.ImageUrl} alt="No Image" height="100" width="100"></img>
+                        <img src={animal.Photo__c} alt="No Image" height="100" width="100"></img>
                     </lightning-layout-item>
                     <lightning-layout-item flexibility="auto" padding="around-small">
                         <h3>{animal.Name}</h3>
-                        <p>Gender: {animal.Gender}</p>
-                        <p>Age: {animal.Age}</p>
-                        <p>Breed: {animal.Breed}</p>
+                        <p>Breed: {animal.Breed__c}</p>
                     </lightning-layout-item>
                 </lightning-layout>
             </lightning-card>

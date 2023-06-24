@@ -64,7 +64,7 @@ export default class AnimalSearcher extends LightningElement {
         // This should update the `animals` property with the search results
     }
 
-    funkcja_kuby(field) {
+    getOptions(field) {
         const breed = this.animals.map((animal) => {
             return animal[field]
         });
@@ -82,26 +82,9 @@ export default class AnimalSearcher extends LightningElement {
         if (data) {
             this.animals = data;
             this.animalsFilter = [...this.animals];
-    
-            // const breed = this.animals.map((animal) => {
-            //     return animal['Breed__c']
-            // });
-
-            // const shelter = this.animals.map((animal) => {
-            //     return animal['Shelter__c']
-            // });
-            // const shelters = [...new Set(shelter)];
-            
-    
-            // // Remove duplicates from breed array
-            // const breeds = [...new Set(breed)];
-
-            // const newBreedOptions = breeds.map((breed) => {
-            //     return { label: breed, value: breed };
-            // });
-    
-            this.breedOptions = this.funkcja_kuby('Breed__c')
-            this.shelterOptions = this.funkcja_kuby('Shelter__c')
+        
+            this.breedOptions = this.getOptions('Breed__c')
+            this.shelterOptions = this.getOptions('Shelter__c')
      
             console.log("The breed options: ", this.breedOptions);
         } else if (error) {

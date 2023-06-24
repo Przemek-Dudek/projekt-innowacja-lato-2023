@@ -106,7 +106,7 @@ public with sharing class SandboxAuthorization {
         token = SandboxAuthorization.getAccessToken();
         //String endpoint = 'https://cw-inn.my.salesforce.com/services/data/v56.0/sobjects/animal__c';
 
-        String endpoint = 'https://cw-inn.my.salesforce.com/services/data/v56.0/query/?q=SELECT+name,Breed__c,PhotoUrl__c+from+Animal__c';
+        String endpoint = 'https://cw-inn.my.salesforce.com/services/data/v56.0/query/?q=SELECT+name,Breed__c,PhotoUrl__c,Age__c+from+Animal__c';
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         
@@ -126,6 +126,7 @@ public with sharing class SandboxAuthorization {
     @AuraEnabled(Cacheable = true)
     public static List<Animal__c> getAnimalsObjects() {
         String jsonAnimals = getAllAnimals();
+        System.debug('Animals:'+jsonAnimals);
         if(jsonAnimals == null) {
             return null;
         }
@@ -145,7 +146,16 @@ public with sharing class SandboxAuthorization {
             String name = (String) recordMap.get('Name');
             String photo = (String) recordMap.get('PhotoUrl__c');
             String breed = (String) recordMap.get('Breed__c');
-            animals.add(new Animal__c(Name = name, Breed__c=breed, Photo__c=photo, Shelter__c='a065r000003ct50AAA'));
+            Integer age;
+            try {
+                System.debug('Age: '+(String) recordMap.get('Age__c')+' '+'Name: ' + name);
+                
+                age = Integer.valueOf((String) recordMap.get('Age__c'));
+            } catch (Exception  e) {
+                age = 1;
+            }
+            System.debug('Age: '+age+' '+'Name: ' + name);
+            animals.add(new Animal__c(Name = name,Age__c = age, Breed__c=breed, Photo__c=photo, Shelter__c='a065r000003ct50AAA'));
         }
 		
         return animals;

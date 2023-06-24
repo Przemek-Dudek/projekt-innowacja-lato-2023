@@ -3,7 +3,6 @@
         <div class="slds-m-around_medium">
             <lightning-combobox name="shelter" label="Shelter" value={shelter} placeholder="Select Shelter" options={shelterOptions} onchange={handleShelterChange}> </lightning-combobox>
             <lightning-combobox name="breed" label="Breed" value={breed} placeholder="Select Breed" options={breedOptions} onchange={handleBreedChange}> </lightning-combobox>
-            <lightning-combobox name="gender" label="Gender" value={gender} placeholder="Select Gender" options={genderOptions} onchange={handleGenderChange}> </lightning-combobox>
             <lightning-combobox name="age" label="Age" value={age} placeholder="Select Age" options={ageOptions} onchange={handleAgeChange}> </lightning-combobox>
             <!-- <lightning-button variant="brand" label="Search" title="Search" onclick={handleSearch} class="slds-m-left_x-small"></lightning-button> -->
         </div>
@@ -16,6 +15,7 @@
                     <lightning-layout-item flexibility="auto" padding="around-small">
                         <h3>{animal.Name}</h3>
                         <p>Breed: {animal.Breed__c}</p>
+                        <p>age: {animal.Age__c}</p>
                     </lightning-layout-item>
                 </lightning-layout>
             </lightning-card>

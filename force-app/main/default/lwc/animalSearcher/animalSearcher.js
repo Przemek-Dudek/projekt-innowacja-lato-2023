@@ -4,7 +4,6 @@ export default class AnimalSearcher extends LightningElement {
     @track shelter = 'any';
     @track breed = 'any';
     @track age = 'any';
-    @track gender = 'any';
     @track imageFile;
     @track animals = [];
     @track animalsFilter = [...this.animals];
@@ -13,32 +12,39 @@ export default class AnimalSearcher extends LightningElement {
     @track ageOptions = [];
     
 
-    genderOptions = [
-        {label: 'any', value: ''},
-        { label: 'Male', value: 'male' },
-        { label: 'Female', value: 'female' },
-    ];
 
     handleShelterChange(event) {
         this.shelter = event.target.value;
-        if(this.shelter === 'any') {
-            this.animalsFilter = [...this.animals]
-        } else {
+        this.filterAnimals();
+    }
+    handleBreedChange(event) {
+        this.breed = event.target.value;
+        this.filterAnimals();
+    }
+    handleAgeChange(event) {
+        this.age = event.target.value;
+        this.filterAnimals();
+    }
+
+    filterAnimals () {
+        this.animalsFilter = [...this.animals]
+        if(this.shelter !== 'any') {
             this.animalsFilter = this.animals.filter((animal) => {
                 if (animal['Shelter__c'] === this.shelter) {
                     return animal;
                 }
             })  
         }
-    }
-
-    handleBreedChange(event) {
-        this.breed = event.target.value;
-        if(this.breed === 'any') {
-            this.animalsFilter = [...this.animals]
-        } else {
-            this.animalsFilter = this.animals.filter((animal) => {
+        if(this.breed !== 'any'){
+            this.animalsFilter = this.animalsFilter.filter((animal) => {
                 if (animal['Breed__c'] === this.breed) {
+                    return animal;
+                }
+            })
+        }
+        if(this.age !== 'any'){
+            this.animalsFilter = this.animalsFilter.filter((animal) => {
+                if (String(animal['Age__c']) === String(this.age)) {
                     return animal;
                 }
             })
@@ -50,14 +56,8 @@ export default class AnimalSearcher extends LightningElement {
         // TODO: Use this imageFile with image recognition API to get the breed
     }
 
-    handleAgeChange(event) {
-        this.age = event.target.value;
-        // TODO: Use this imageFile with image recognition API to get the breed
-    }
+    
 
-    handleGenderChange(event) {
-        this.gender = event.target.value;
-    }
 
     handleSearch() {
         // TODO: Use the parameters to perform search in Salesforce or through external API
@@ -72,7 +72,7 @@ export default class AnimalSearcher extends LightningElement {
         const breeds = [...new Set(breed)];
 
         const newBreedOptions = breeds.map((breed) => {
-            return { label: breed, value: breed };
+            return { label: String(breed), value: String(breed) };
         });
         return [...newBreedOptions, {label: 'any', value: 'any'}]
     }
@@ -85,6 +85,7 @@ export default class AnimalSearcher extends LightningElement {
         
             this.breedOptions = this.getOptions('Breed__c')
             this.shelterOptions = this.getOptions('Shelter__c')
+            this.ageOptions = this.getOptions('Age__c')
      
             console.log("The breed options: ", this.breedOptions);
         } else if (error) {

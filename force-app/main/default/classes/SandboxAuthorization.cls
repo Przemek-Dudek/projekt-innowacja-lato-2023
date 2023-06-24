@@ -146,15 +146,9 @@ public with sharing class SandboxAuthorization {
             String name = (String) recordMap.get('Name');
             String photo = (String) recordMap.get('PhotoUrl__c');
             String breed = (String) recordMap.get('Breed__c');
-            Integer age;
-            try {
-                System.debug('Age: '+(String) recordMap.get('Age__c')+' '+'Name: ' + name);
-                
-                age = Integer.valueOf((String) recordMap.get('Age__c'));
-            } catch (Exception  e) {
-                age = 1;
-            }
-            System.debug('Age: '+age+' '+'Name: ' + name);
+            Double age = (Double) recordMap.get('Age__c');
+
+            //System.debug('Age: '+age+' '+'Name: ' + name);
             animals.add(new Animal__c(Name = name,Age__c = age, Breed__c=breed, Photo__c=photo, Shelter__c='a065r000003ct50AAA'));
         }
 		

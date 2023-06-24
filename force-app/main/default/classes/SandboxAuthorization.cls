@@ -100,6 +100,64 @@ public with sharing class SandboxAuthorization {
 		
         return photosMap;
     }
-    
+
+
+    public static List<String> getAllAnimalIds() {        
+        token = SandboxAuthorization.getAccessToken();
+        String endpoint = 'https://cw-inn.my.salesforce.com/services/data/sobjects/animal__c';
+
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        
+        request.setEndpoint(endpoint);
+        request.setMethod('GET');
+        request.setHeader('Authorization', 'Bearer ' + token);
+        
+        HttpResponse response = http.send(request);
+        
+        List<String> idList = new List<String>();
+        if (response.getStatusCode() == 200) {
+            String idText = response.getBody();
+            idText = idText.substring(2,idText.length()-2);
+            String cleanText = idText.replaceAll('[\\\\"]', '');
+            
+            idList = cleanText.split(',');
+        } else {
+            String errorMessage = 'Wystąpił błąd: ' + response.getStatusCode();
+            idList.add(errorMessage);
+        }
+        return idList;
+    }
+
+    public static String getAnimal(String animalId) {
+        String endpoint = 'https://cw-inn.my.salesforce.com/services/data/sobjects/animal__c/' + animalId;
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        
+        request.setEndpoint(endpoint);
+        request.setMethod('GET');
+        request.setHeader('Authorization', 'Bearer ' + token);
+        
+        HttpResponse response = http.send(request);     
+        if (response.getStatusCode() == 200) {
+        	return response.getBody();
+        } else {
+		    System.debug('Error during access token retrieval. Status code: ' + response.getStatusCode());
+            return null;
+
+        }
+    }
+
+    @AuraEnabled(Cacheable = true)
+    public static List<String> getAnimalsObjects() {
+        List<String> animalList = new List<String>();
+        for(String singleId : SandboxAuthorization.getAllAnimalIds()) {
+            String serializedAnimal = getAnimal(singleId);
+            if(animalList != null)
+                animalList.add(serializedAnimal);
+        }
+		
+        return animalList;
+    }
 
 }

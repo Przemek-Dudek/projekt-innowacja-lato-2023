@@ -5,8 +5,11 @@ trigger UpdateNumberOfAvailableAdoptions on Adoption__c (after update, after ins
     } else if(trigger.isUpdate) {
         option = 2;
         AdoptionTriggerHandler.UpdateNumberOfAdoptions(Trigger.new, Trigger.oldMap);
+        AdoptionTriggerHandler.TriggerForSendingEmails(Trigger.new, Trigger.oldMap);
     } else {
+        AdoptionTriggerHandler.TriggerToGivingFreeFood(Trigger.new);
         option = 3;
     }
+    
     AdoptionTriggerHandler.UpdateNumberOfAvailableAdoptions(Trigger.new, Trigger.oldMap, option);
 }

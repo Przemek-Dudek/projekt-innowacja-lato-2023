@@ -31,9 +31,10 @@ public class EinsteinTokenGenerator {
     public static String generateJWT() {      
         String header = '{"alg":"RS256","typ":"JWT"}';
         DateTime dt = System.Now();
-        Long expirationTime = dt.getTime() / 1000 + 3000;
+        Long expirationTime = dt.getTime() / 1000 + 3600/3;
+        System.debug(expirationTime);
     
-        String claim = '{"iss":"' + iss + '",""sub":"' + sub + '","aud":"' + aud + '","exp":' + expirationTime + '}';
+        String claim = '{'+ '"sub":"' + sub + '","aud":"' + aud + '","exp":' + expirationTime + '}';
     
         String encodedHeader = EncodingUtil.base64Encode(Blob.valueOf(header));
         String encodedClaim = EncodingUtil.base64Encode(Blob.valueOf(claim));
@@ -44,9 +45,9 @@ public class EinsteinTokenGenerator {
         Blob signature = Crypto.sign('RSA-SHA256',Blob.valueOf(unsignedToken), privateKeyBlob);   
     
         String encodedSignature = EncodingUtil.base64Encode(signature);
-    
+    	encodedSignature = encodedSignature.replaceAll('[+]','-').replaceAll('[/]','_').substring(0,encodedSignature.length()-2);
         String jwt = unsignedToken + '.' + encodedSignature;
-    
+		system.debug('jwt:'+encodedSignature);
         return jwt;
     }    
     
@@ -59,8 +60,7 @@ public class EinsteinTokenGenerator {
         req.setHeader('Content-Type', 'application/x-www-form-urlencoded');
     
         String jwt = generateJWT();
-        //String jwt = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.NHVaYe26MbtOYhSKkoKYdFVomg4i8ZJd8_-RU8VNbftc4TSMb4bXP3l3YlNWACwyXPGffz5aXHc6lty1Y2t4SWRqGteragsVdZufDn5BlnJl9pdR_kdVFUsra2rWKEofkZeIC4yWytE58sMIihvo9H1ScmmVwBcQP6XETqYd0aSHp1gOa9RdUPDvoXQ5oqygTqVtxaDr6wUFKrKItgBMzWIdNZ6y7O9E0DhEPTbE9rfBo6KTFsHAZnMg4k68CDp2woYIaXbmYTWcvbzIuHO7_37GT79XdIwkm95QJ7hYC9RiwrV7mesbY4PAahERJawntho0my942XheVLmGwLMBkQ';
-        //
+        //String jwt = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqc3RlbXBuaWFrQGNyYWZ0d2FyZS5iaXoiLCJhdWQiOiJodHRwczovL2FwaS5laW5zdGVpbi5haS92Mi9vYXV0aDIvdG9rZW4iLCJleHAiOjE2ODc3OTk1ODl9.W3w9J6CZm9I1NKwNrKMMgvKF-uDzmHqMjshTk8a7Y00iN6r1OFBclG7RT1WuKo4UYJx4K_OPtd5yaR-0fymNE9CYAQgkpJVHKdzrD7o7yqg_9crdvQj50k-a4FdEb44MVPIK_ZJ3f7A8pe9s-K3LBUTvx8Mo_tgn8cGY4vt2pNjNeWOFBp5oY7X3PQktwp_TabxgCvTgS64LJ5K7DHPcdjdDbBhS-fq8iRS09S1G9b3aiL9KIsj_DTeAgYMoy9WA1kPzN-0bNOf7OTfSrsE622q-TXmOqijDVuIb_1J2fFJ3xfzGwel02c8yj430YzWUDUvonNgV8-50PyeDDdzGBg'; 
         System.debug('jwt: ' + jwt);
         String requestBody = 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' + jwt;
     
@@ -77,6 +77,7 @@ public class EinsteinTokenGenerator {
     
         if (res.getStatusCode() == 200) {
             Map<String, Object> responseMap = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
+            System.debug('Token: '+(String) responseMap.get('access_token'));
             return (String) responseMap.get('access_token');
         } else {
             System.debug('Wystąpił błąd: ' + res.getStatusCode());

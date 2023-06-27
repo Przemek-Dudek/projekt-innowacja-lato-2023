@@ -32,7 +32,7 @@ public class EinsteinTokenGenerator {
         String header = '{"alg":"RS256","typ":"JWT"}';
         DateTime dt = System.Now();
         Long expirationTime = dt.getTime() / 1000 + 3600/3;
-        System.debug(expirationTime);
+        //System.debug(expirationTime);
     
         String claim = '{'+ '"sub":"' + sub + '","aud":"' + aud + '","exp":' + expirationTime + '}';
     
@@ -47,7 +47,7 @@ public class EinsteinTokenGenerator {
         String encodedSignature = EncodingUtil.base64Encode(signature);
     	encodedSignature = encodedSignature.replaceAll('[+]','-').replaceAll('[/]','_').substring(0,encodedSignature.length()-2);
         String jwt = unsignedToken + '.' + encodedSignature;
-		system.debug('jwt:'+encodedSignature);
+		//system.debug('jwt:'+encodedSignature);
         return jwt;
     }    
     
@@ -61,7 +61,7 @@ public class EinsteinTokenGenerator {
     
         String jwt = generateJWT();
         //String jwt = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqc3RlbXBuaWFrQGNyYWZ0d2FyZS5iaXoiLCJhdWQiOiJodHRwczovL2FwaS5laW5zdGVpbi5haS92Mi9vYXV0aDIvdG9rZW4iLCJleHAiOjE2ODc3OTk1ODl9.W3w9J6CZm9I1NKwNrKMMgvKF-uDzmHqMjshTk8a7Y00iN6r1OFBclG7RT1WuKo4UYJx4K_OPtd5yaR-0fymNE9CYAQgkpJVHKdzrD7o7yqg_9crdvQj50k-a4FdEb44MVPIK_ZJ3f7A8pe9s-K3LBUTvx8Mo_tgn8cGY4vt2pNjNeWOFBp5oY7X3PQktwp_TabxgCvTgS64LJ5K7DHPcdjdDbBhS-fq8iRS09S1G9b3aiL9KIsj_DTeAgYMoy9WA1kPzN-0bNOf7OTfSrsE622q-TXmOqijDVuIb_1J2fFJ3xfzGwel02c8yj430YzWUDUvonNgV8-50PyeDDdzGBg'; 
-        System.debug('jwt: ' + jwt);
+        //System.debug('jwt: ' + jwt);
         String requestBody = 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' + jwt;
     
         req.setBody(requestBody);
@@ -77,7 +77,7 @@ public class EinsteinTokenGenerator {
     
         if (res.getStatusCode() == 200) {
             Map<String, Object> responseMap = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
-            System.debug('Token: '+(String) responseMap.get('access_token'));
+            //System.debug('Token: '+(String) responseMap.get('access_token'));
             return (String) responseMap.get('access_token');
         } else {
             System.debug('Wystąpił błąd: ' + res.getStatusCode());
@@ -86,5 +86,27 @@ public class EinsteinTokenGenerator {
     
         return null;
     }
-    
+
+
+    @AuraEnabled
+    public static String uploadFileToApex(String base64) {
+        String token = generateAccessToken();
+        String boundary = '----' + String.valueOf(Math.random()).substring(2, 18);
+
+
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('https://api.einstein.ai/v2/vision/predict');
+        req.setMethod('POST');
+        req.setHeader('Authorization', 'Bearer ' + token);
+        req.setHeader('Cache-Control', 'no-cache');
+        req.setHeader('Content-Type', 'multipart/form-data');
+
+        req.setBody('sampleBase64Content=' + base64 + '&modelId=XQRQJXFGKZYOGSVYDPNNJ5L4SU');
+
+        Http http = new Http();
+        HttpResponse res = http.send(req);
+
+
+        return res.getBody();
+    }
 }

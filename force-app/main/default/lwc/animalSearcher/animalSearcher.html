@@ -4,7 +4,8 @@
             <lightning-combobox name="shelter" label="Shelter" value={shelter} placeholder="Select Shelter" options={shelterOptions} onchange={handleShelterChange}> </lightning-combobox>
             <lightning-combobox name="breed" label="Breed" value={breed} placeholder="Select Breed" options={breedOptions} onchange={handleBreedChange}> </lightning-combobox>
             <lightning-combobox name="age" label="Age" value={age} placeholder="Select Age" options={ageOptions} onchange={handleAgeChange}> </lightning-combobox>
-            <!-- <lightning-button variant="brand" label="Search" title="Search" onclick={handleSearch} class="slds-m-left_x-small"></lightning-button> -->
+            <lightning-input type="file" label="Upload Image" onchange={handleFileChange}></lightning-input>
+            <lightning-button variant="brand" label="Search" title="Search" onclick={handleSearch} class="slds-m-left_x-small"></lightning-button>
         </div>
         <template for:each={animalsFilter} for:item="animal">
             <lightning-card key={animal.Id}>

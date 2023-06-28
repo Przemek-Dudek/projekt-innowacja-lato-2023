@@ -91,22 +91,28 @@ public class EinsteinTokenGenerator {
     @AuraEnabled
     public static String uploadFileToApex(String base64) {
         String token = generateAccessToken();
+        String modelId = 'XQRQJXFGKZYOGSVYDPNNJ5L4SU';
         String boundary = '----' + String.valueOf(Math.random()).substring(2, 18);
-
 
         HttpRequest req = new HttpRequest();
         req.setEndpoint('https://api.einstein.ai/v2/vision/predict');
         req.setMethod('POST');
         req.setHeader('Authorization', 'Bearer ' + token);
         req.setHeader('Cache-Control', 'no-cache');
-        req.setHeader('Content-Type', 'multipart/form-data');
+        req.setHeader('Content-Type', 'application/json');
 
-        req.setBody('sampleBase64Content=' + base64 + '&modelId=XQRQJXFGKZYOGSVYDPNNJ5L4SU');
-
+		req.setBody('{"modelId":"'+modelId+'","sampleBase64Content":"'+ base64+'"}'); 
         Http http = new Http();
         HttpResponse res = http.send(req);
 
-
-        return res.getBody();
+		
+        if (res.getStatusCode() == 200) {
+            System.debug('Dziala: '+res.getBody());
+            return res.getBody();
+        } else {
+            System.debug('Wystąpił błąd: ' + res.getStatusCode());
+            System.debug('Odpowiedź: ' + res.getBody());
+            return null;
+        }
     }
 }

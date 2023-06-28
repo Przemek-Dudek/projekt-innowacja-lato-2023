@@ -123,9 +123,37 @@ public with sharing class SandboxAuthorization {
         return null;
     }
 
+
+    public static String getAnimal(String id) {        
+        token = SandboxAuthorization.getAccessToken();
+        //String endpoint = 'https://cw-inn.my.salesforce.com/services/data/v56.0/sobjects/animal__c';
+
+        String endpoint = 'https://cw-inn.my.salesforce.com/services/data/v56.0/query/?q=SELECT+name,Breed__c,PhotoUrl__c,Age__c+from+Animal__c+where+id+=+\''+ id+'\'';
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        
+        request.setEndpoint(endpoint);
+        request.setMethod('GET');
+        request.setHeader('Authorization', 'Bearer ' + token);
+        
+        HttpResponse response = http.send(request);
+        
+        if (response.getStatusCode() == 200) {
+            return response.getBody();
+        }
+        String errorMessage = 'Wystąpił błąd: ' + response.getStatusCode();
+        return null;
+    }
+
     @AuraEnabled(Cacheable = true)
-    public static List<Animal__c> getAnimalsObjects() {
-        String jsonAnimals = getAllAnimals();
+    public static List<Animal__c> getAnimalsObjects(String id) {
+        String jsonAnimals;
+        if(id == null)
+            jsonAnimals = getAllAnimals();
+        else 
+            jsonAnimals = getAnimal(id);
+
+
         System.debug('Animals:'+jsonAnimals);
         if(jsonAnimals == null) {
             return null;

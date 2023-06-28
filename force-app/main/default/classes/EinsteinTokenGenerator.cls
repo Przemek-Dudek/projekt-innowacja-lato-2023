@@ -93,6 +93,7 @@ public class EinsteinTokenGenerator {
         String token = generateAccessToken();
         String modelId = 'XQRQJXFGKZYOGSVYDPNNJ5L4SU';
 
+
         HttpRequest req = new HttpRequest();
         req.setEndpoint('https://api.einstein.ai/v2/vision/predict');
         req.setMethod('POST');
@@ -111,7 +112,6 @@ public class EinsteinTokenGenerator {
 
 		
         if (res.getStatusCode() == 200) {
-            System.debug('Dziala: '+ res.getBody());
             return res.getBody();
         } else {
             System.debug('Wystąpił błąd: ' + res.getStatusCode());

@@ -1,25 +1,27 @@
 <template>
     <lightning-card title="Animal Search App" icon-name="custom:custom14">
-        <div class="slds-m-around_medium">
+        <div class="slds-m-around_medium container">
             <lightning-combobox name="shelter" label="Shelter" value={shelter} placeholder="Select Shelter" options={shelterOptions} onchange={handleShelterChange}> </lightning-combobox>
             <lightning-combobox name="breed" label="Breed" value={breed} placeholder="Select Breed" options={breedOptions} onchange={handleBreedChange}> </lightning-combobox>
             <lightning-combobox name="age" label="Age" value={age} placeholder="Select Age" options={ageOptions} onchange={handleAgeChange}> </lightning-combobox>
             <lightning-input type="file" label="Upload Image" onchange={handleFileChange}></lightning-input>
-            <lightning-button variant="brand" label="Search" title="Search" onclick={handleSearch} class="slds-m-left_x-small"></lightning-button>
         </div>
-        <template for:each={animalsFilter} for:item="animal">
-            <lightning-card key={animal.Id}>
-                <lightning-layout>
-                    <lightning-layout-item flexibility="auto" padding="around-small">
-                        <img src={animal.Photo__c} alt="No Image" height="100" width="100"></img>
-                    </lightning-layout-item>
-                    <lightning-layout-item flexibility="auto" padding="around-small">
-                        <h3>{animal.Name}</h3>
-                        <p>Breed: {animal.Breed__c}</p>
-                        <p>age: {animal.Age__c}</p>
-                    </lightning-layout-item>
-                </lightning-layout>
-            </lightning-card>
-        </template>
+        <div class="container">
+            <template for:each={animalsFilter} for:item="animal">
+                <lightning-card key={animal.Id}>
+                    <lightning-layout class="box">
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <img src={animal.Photo__c} alt="No Image" height="150" width="150"></img>
+                        </lightning-layout-item>
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <h3>{animal.Name}</h3>
+                            <p>Breed: {animal.Breed__c}</p>
+                            <p>age: {animal.Age__c}</p>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </lightning-card>
+            </template>
+        </div>
+
     </lightning-card>
 </template>

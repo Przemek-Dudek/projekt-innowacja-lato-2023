@@ -1,6 +1,7 @@
 import { LightningElement, track, wire } from 'lwc';
 import getAllAnimalObjects from '@salesforce/apex/SandboxAuthorization.getAnimalsObjects';
 import getBreedFromPhoto from '@salesforce/apex/EinsteinTokenGenerator.uploadFileToApex';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class AnimalSearcher extends LightningElement {
     @track shelter = 'any';
@@ -37,13 +38,17 @@ export default class AnimalSearcher extends LightningElement {
                 }
             })  
         }
-        if(this.breed !== 'any'){
+        if (this.breed !== 'any') {
+            const normalizedBreed = this.breed.toUpperCase();
+          
             this.animalsFilter = this.animalsFilter.filter((animal) => {
-                if (animal['Breed__c'] === this.breed) {
-                    return animal;
-                }
-            })
-        }
+              const normalizedAnimalBreed = animal['Breed__c'];
+             
+              if (String(normalizedAnimalBreed).toUpperCase() === normalizedBreed) {
+                return animal;
+              }
+            });
+          }
         if(this.age !== 'any'){
             this.animalsFilter = this.animalsFilter.filter((animal) => {
                 if (String(animal['Age__c']) === String(this.age)) {
@@ -63,10 +68,25 @@ export default class AnimalSearcher extends LightningElement {
 
         reader.onload = () => {
             const base64 = reader.result.split(',')[1];
-
+            const showToastEvent = new ShowToastEvent({
+                title: 'Success',
+                message: 'Photo uploaded',
+                variant: 'success'
+            });
+            this.dispatchEvent(showToastEvent);
             getBreedFromPhoto({ base64: base64 })
                 .then(result => {
-                    console.log('result: '+result)
+                    
+                    console.log('pierwszy log')
+                    const parsedResponse = JSON.parse(result);
+                    console.log(parsedResponse)
+                    const label = parsedResponse.probabilities[0].label;
+                    const replacedLabel = label.replace(/_/g, " ");
+                    this.breedOptions.push({ label: String(replacedLabel), value: String(replacedLabel)})
+
+                    this.breed = String(replacedLabel)
+                    
+                    this.filterAnimals()
                 })
                 .catch(error => {
                     console.log(error)

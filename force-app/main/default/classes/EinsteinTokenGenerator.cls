@@ -107,7 +107,7 @@ public class EinsteinTokenGenerator {
 
 		
         if (res.getStatusCode() == 200) {
-            System.debug('Dziala: '+res.getBody());
+            System.debug('Dziala: '+ res.getBody());
             return res.getBody();
         } else {
             System.debug('Wystąpił błąd: ' + res.getStatusCode());

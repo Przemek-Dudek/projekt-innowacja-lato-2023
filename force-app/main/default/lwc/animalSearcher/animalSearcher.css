@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; 
+}
+.box {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(235, 209, 176, 0.301);
+    height: 25vh;
+    min-height: auto;
+    margin-right: 10px;
+}

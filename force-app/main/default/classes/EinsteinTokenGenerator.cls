@@ -92,7 +92,7 @@ public class EinsteinTokenGenerator {
     public static String uploadFileToApex(Boolean fromUrl,String base64) {
         String token = generateAccessToken();
         String modelId = 'XQRQJXFGKZYOGSVYDPNNJ5L4SU';
-        String boundary = '----' + String.valueOf(Math.random()).substring(2, 18);
+
 
         HttpRequest req = new HttpRequest();
         req.setEndpoint('https://api.einstein.ai/v2/vision/predict');
@@ -112,7 +112,6 @@ public class EinsteinTokenGenerator {
 
 		
         if (res.getStatusCode() == 200) {
-            System.debug('Dziala: '+res.getBody());
             return res.getBody();
         } else {
             System.debug('Wystąpił błąd: ' + res.getStatusCode());

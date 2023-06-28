@@ -123,6 +123,7 @@ public with sharing class SandboxAuthorization {
         return null;
     }
 
+
     public static String getAnimal(String id) {        
         token = SandboxAuthorization.getAccessToken();
         //String endpoint = 'https://cw-inn.my.salesforce.com/services/data/v56.0/sobjects/animal__c';
@@ -151,6 +152,7 @@ public with sharing class SandboxAuthorization {
             jsonAnimals = getAllAnimals();
         else 
             jsonAnimals = getAnimal(id);
+
 
         System.debug('Animals:'+jsonAnimals);
         if(jsonAnimals == null) {

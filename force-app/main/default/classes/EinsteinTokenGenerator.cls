@@ -89,7 +89,7 @@ public class EinsteinTokenGenerator {
 
 
     @AuraEnabled
-    public static String uploadFileToApex(String base64) {
+    public static String uploadFileToApex(Boolean fromUrl,String base64) {
         String token = generateAccessToken();
         String modelId = 'XQRQJXFGKZYOGSVYDPNNJ5L4SU';
         String boundary = '----' + String.valueOf(Math.random()).substring(2, 18);
@@ -101,7 +101,12 @@ public class EinsteinTokenGenerator {
         req.setHeader('Cache-Control', 'no-cache');
         req.setHeader('Content-Type', 'application/json');
 
-		req.setBody('{"modelId":"'+modelId+'","sampleBase64Content":"'+ base64+'"}'); 
+        if(!fromUrl)
+			req.setBody('{"modelId":"'+modelId+'","sampleBase64Content":"'+ base64+'"}'); 
+        else
+            req.setBody('{"modelId":"'+modelId+'","sampleLocation":"'+ base64+'"}');
+        
+        
         Http http = new Http();
         HttpResponse res = http.send(req);
 
@@ -114,5 +119,32 @@ public class EinsteinTokenGenerator {
             System.debug('Odpowiedź: ' + res.getBody());
             return null;
         }
+    }
+
+
+    
+    public static String getMostLikelyBreed(String Url)
+    {
+        
+        String json = uploadFileToApex(true,Url);
+        if(json == null)
+            return null;
+        
+        String breed;
+        Decimal maxProbability = -1;
+		Map<String, Object> jsonMap = (Map<String, Object>) System.JSON.deserializeUntyped(json);
+		List<Object> probabilities = (List<Object>) jsonMap.get('probabilities');
+		for (Object obj : probabilities) {
+            System.debug(obj);
+    		Map<String, Object> probability = (Map<String, Object>) obj;
+   		 	Decimal probabilityValue = (Decimal) probability.get('probability');
+    		String label = (String) probability.get('label');
+            if(probabilityValue > maxProbability )
+            {
+                maxProbability = probabilityValue;
+                breed = label;
+            }
+		}
+        return breed;
     }
 }

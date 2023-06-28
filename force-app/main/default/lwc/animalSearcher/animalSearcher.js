@@ -64,7 +64,7 @@ export default class AnimalSearcher extends LightningElement {
         reader.onload = () => {
             const base64 = reader.result.split(',')[1];
 
-            getBreedFromPhoto({ base64: base64 })
+            getBreedFromPhoto({fromUrl: false, base64: base64 })
                 .then(result => {
                     console.log('result: '+result)
                 })

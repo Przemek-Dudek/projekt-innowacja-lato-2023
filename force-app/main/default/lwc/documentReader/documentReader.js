@@ -1,5 +1,5 @@
 import { LightningElement, track, wire } from 'lwc';
-import readDocument from '@salesforce/apex/EinsteinTokenGenerator.readDocument';
+import addPerson from '@salesforce/apex/EinsteinTokenGenerator.addPerson';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class AnimalSearcher extends LightningElement {    
@@ -20,10 +20,9 @@ export default class AnimalSearcher extends LightningElement {
                 variant: 'success'
             });
             this.dispatchEvent(showToastEvent);
-            readDocument({isID: true, base64: base64 })
+            addPerson({base64: base64 })
                 .then(result => {
-                    const parsedResponse = JSON.parse(result);
-                    console.log(parsedResponse)
+                    
                 })
                 .catch(error => {
                     console.log(error)

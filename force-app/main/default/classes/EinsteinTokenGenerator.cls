@@ -147,7 +147,7 @@ public class EinsteinTokenGenerator {
         return breed;
     }
 
-    @AuraEnabled
+    
     public static List<String> readDocument(Boolean isID, String base64)
     {
         String token = generateAccessToken();
@@ -224,12 +224,16 @@ public class EinsteinTokenGenerator {
 
         System.debug(response);
         
-        addPerson(response);
+        
 
         return response;
     }
 
-    public static void addPerson(List<String> credentials) {
+
+    @AuraEnabled
+    public static void addPerson(String base64) {
+
+        List<String> credentials = readDocument(true,base64);
         String gender;
         if(credentials.size()!=3)
             return;
@@ -242,6 +246,7 @@ public class EinsteinTokenGenerator {
         insert person;
     }
 
+    @AuraEnabled
     public static void addAdoption(List<String> credentials) {
         String gender;
         if(credentials.size()!=3)

@@ -201,21 +201,19 @@ public class EinsteinTokenGenerator {
         {
             for (Object item : probabilities) {
                 Map<String, Object> probability = (Map<String, Object>) item;
-                //System.debug((Map<String, Object>) probability.get('boundingBox').get('maxY'));
     
                 boundingBox = (Map<String, Object>) probability.get('boundingBox');
 
-                System.debug(Decimal.valueOf(String.valueOf(boundingBox.get('minX'))));
+                //System.debug(Decimal.valueOf(String.valueOf(boundingBox.get('minX'))));
 
-                // Decimal minX = Decimal.valueOf(String.valueOf(boundingBox.get('minX')));
-                // Decimal minY = Decimal(boundingBox.get('minY'));
-                // Decimal maxX = Decimal(boundingBox.get('minX'));
-                // Decimal maxY = Decimal(boundingBox.get('maxY'));
+                Decimal minX = Decimal.valueOf(String.valueOf(boundingBox.get('minX')));
+                Decimal minY = Decimal.valueOf(String.valueOf(boundingBox.get('minY')));
+                Decimal maxX = Decimal.valueOf(String.valueOf(boundingBox.get('maxX')));
+                Decimal maxY = Decimal.valueOf(String.valueOf(boundingBox.get('maxY')));
                 
-                // if(p.inRectangle(minX, maxY, minY, maxX))
-                // {
-                //     response.add((String) probability.get('label'));
-                // }
+                if(p.inRectangle(maxY, minY, minX, maxX)) {
+                     response.add((String) probability.get('label'));
+                 }
                 
             }
         }

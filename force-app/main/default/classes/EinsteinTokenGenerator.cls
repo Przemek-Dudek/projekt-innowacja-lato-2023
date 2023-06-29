@@ -146,4 +146,119 @@ public class EinsteinTokenGenerator {
 		}
         return breed;
     }
+
+    
+    public static List<String> readDocument(Boolean isID, String base64)
+    {
+        String token = generateAccessToken();
+        String modelId = 'OCRModel';
+
+        List<Point> points = new List<Point>();
+        List<String> response = new List<String>();
+        if(isID)
+        {
+            points.add(new Point(433,342,'Name'));
+            points.add(new Point(440,244,'LastName'));
+            points.add(new Point(759,631,'Sex'));
+        } 
+        else
+        {
+            
+        }
+
+
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('https://api.einstein.ai/v2/vision/ocr');
+        req.setMethod('POST');
+        req.setHeader('Authorization', 'Bearer ' + token);
+        req.setHeader('Cache-Control', 'no-cache');
+        req.setHeader('Content-Type', 'application/json');
+
+        
+		req.setBody('{"modelId":"'+modelId+'","sampleBase64Content":"'+ base64+'"}'); 
+        
+        
+        
+        Http http = new Http();
+        HttpResponse res = http.send(req);
+
+		
+        if (res.getStatusCode() != 200) {
+            System.debug('Wystąpił błąd: ' + res.getStatusCode());
+            System.debug('Odpowiedź: ' + res.getBody());
+            return null;
+        }
+        
+
+        System.debug(res.getBody());
+        Map<String, Object> data = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
+
+        Map<String, Object> boundingBox = new Map<String, Object>();
+
+        List<Object> probabilities = (List<Object>) data.get('probabilities');
+        for(Point p : points)
+        {
+            for (Object item : probabilities) {
+                Map<String, Object> probability = (Map<String, Object>) item;
+    
+                boundingBox = (Map<String, Object>) probability.get('boundingBox');
+
+                
+
+                Decimal minX = Decimal.valueOf(String.valueOf(boundingBox.get('minX')));
+                Decimal minY = Decimal.valueOf(String.valueOf(boundingBox.get('minY')));
+                Decimal maxX = Decimal.valueOf(String.valueOf(boundingBox.get('maxX')));
+                Decimal maxY = Decimal.valueOf(String.valueOf(boundingBox.get('maxY')));
+
+                System.debug('minX = '+minX+' minY = ' +minY + ' maxX = '+maxX+ ' maxY = '+maxY + ' Label ='+ String.valueOf(probability.get('label')));
+
+                
+                if(p.inRectangle(maxY, minY, minX, maxX)) {
+                     response.add((String) probability.get('label'));
+                 }
+                
+            }
+        }
+
+
+
+        System.debug(response);
+        
+        
+
+        return response;
+    }
+
+
+    @AuraEnabled
+    public static void addPerson(String base64) {
+
+        List<String> credentials = readDocument(true,base64);
+        String gender;
+        if(credentials.size()!=3)
+            return;
+        if(credentials[2] == 'M') {
+            gender = 'Male';
+        } else {
+            gender = 'Female';
+        }
+        Person__c person = new Person__c(Name=credentials[0], Surname__c=credentials[1], E_mail__c='asd@wp.pl' ,Sex__c=gender);
+        insert person;
+    }
+
+    @AuraEnabled
+    public static void addAdoption(List<String> credentials) {
+        String gender;
+        if(credentials.size()!=3)
+            return;
+        if(credentials[2] == 'M') {
+            gender = 'Male';
+        } else {
+            gender = 'Female';
+        }
+        Person__c person = new Person__c(Name=credentials[0], Surname__c=credentials[1], E_mail__c='asd@wp.pl' ,Sex__c=gender);
+        insert person;
+    }
+
+
 }

@@ -11,7 +11,7 @@ public class Point {
 
 
     public  Boolean inRectangle(Decimal bottom, Decimal top, Decimal left, Decimal right) {
-        if (x >= left && x <= right && y >= bottom && y <= top) {
+        if (x >= left && x <= right && y <= bottom && y >= top) {
             return true;
         } else {
             return false;

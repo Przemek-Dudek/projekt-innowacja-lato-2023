@@ -157,9 +157,8 @@ public class EinsteinTokenGenerator {
         List<String> response = new List<String>();
         if(isID)
         {
-            points.add(new Point(384,130,'Name'));
-            points.add(new Point(440,432,'LastName'));
-           // points.add(new Point(437,630,'Birthday'));
+            points.add(new Point(433,342,'Name'));
+            points.add(new Point(440,244,'LastName'));
             points.add(new Point(759,631,'Sex'));
         } 
         else
@@ -204,12 +203,15 @@ public class EinsteinTokenGenerator {
     
                 boundingBox = (Map<String, Object>) probability.get('boundingBox');
 
-                //System.debug(Decimal.valueOf(String.valueOf(boundingBox.get('minX'))));
+                
 
                 Decimal minX = Decimal.valueOf(String.valueOf(boundingBox.get('minX')));
                 Decimal minY = Decimal.valueOf(String.valueOf(boundingBox.get('minY')));
                 Decimal maxX = Decimal.valueOf(String.valueOf(boundingBox.get('maxX')));
                 Decimal maxY = Decimal.valueOf(String.valueOf(boundingBox.get('maxY')));
+
+                System.debug('minX = '+minX+' minY = ' +minY + ' maxX = '+maxX+ ' maxY = '+maxY + ' Label ='+ String.valueOf(probability.get('label')));
+
                 
                 if(p.inRectangle(maxY, minY, minX, maxX)) {
                      response.add((String) probability.get('label'));
@@ -229,23 +231,27 @@ public class EinsteinTokenGenerator {
 
     public static void addPerson(List<String> credentials) {
         String gender;
+        if(credentials.size()!=3)
+            return;
         if(credentials[2] == 'M') {
             gender = 'Male';
         } else {
             gender = 'Female';
         }
-        Person person = new Person(Name__c=credentials[0], Surname__c=credentials[1], E_mail__c='asd@wp.pl' ,Sex__c=gender);
+        Person__c person = new Person__c(Name=credentials[0], Surname__c=credentials[1], E_mail__c='asd@wp.pl' ,Sex__c=gender);
         insert person;
     }
 
     public static void addAdoption(List<String> credentials) {
         String gender;
+        if(credentials.size()!=3)
+            return;
         if(credentials[2] == 'M') {
             gender = 'Male';
         } else {
             gender = 'Female';
         }
-        Person person = new Person(Name__c=credentials[0], Surname__c=credentials[1], E_mail__c='asd@wp.pl' ,Sex__c=gender);
+        Person__c person = new Person__c(Name=credentials[0], Surname__c=credentials[1], E_mail__c='asd@wp.pl' ,Sex__c=gender);
         insert person;
     }
 

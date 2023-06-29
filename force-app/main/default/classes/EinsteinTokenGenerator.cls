@@ -146,4 +146,86 @@ public class EinsteinTokenGenerator {
 		}
         return breed;
     }
+
+    @AuraEnabled
+    public static List<String> readDocument(Boolean isID, String base64)
+    {
+        String token = generateAccessToken();
+        String modelId = 'OCRModel';
+
+        List<Point> points = new List<Point>();
+        List<String> response = new List<String>();
+        if(isID)
+        {
+            points.add(new Point(384,130,'Name'));
+            points.add(new Point(440,432,'LastName'));
+            points.add(new Point(437,630,'Birthday'));
+            points.add(new Point(759,631,'Sex'));
+        } 
+        else
+        {
+            
+        }
+
+
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('https://api.einstein.ai/v2/vision/ocr');
+        req.setMethod('POST');
+        req.setHeader('Authorization', 'Bearer ' + token);
+        req.setHeader('Cache-Control', 'no-cache');
+        req.setHeader('Content-Type', 'application/json');
+
+        
+		req.setBody('{"modelId":"'+modelId+'","sampleBase64Content":"'+ base64+'"}'); 
+        
+        
+        
+        Http http = new Http();
+        HttpResponse res = http.send(req);
+
+		
+        if (res.getStatusCode() != 200) {
+            System.debug('Wystąpił błąd: ' + res.getStatusCode());
+            System.debug('Odpowiedź: ' + res.getBody());
+            return null;
+        }
+        
+
+        System.debug(res.getBody());
+        Map<String, Object> data = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
+
+        Map<String, Object> boundingBox = new Map<String, Object>();
+
+        List<Object> probabilities = (List<Object>) data.get('probabilities');
+        for(Point p : points)
+        {
+            for (Object item : probabilities) {
+                Map<String, Object> probability = (Map<String, Object>) item;
+                //System.debug((Map<String, Object>) probability.get('boundingBox').get('maxY'));
+    
+                boundingBox = (Map<String, Object>) probability.get('boundingBox');
+
+                System.debug(Decimal.valueOf(String.valueOf(boundingBox.get('minX'))));
+
+                // Decimal minX = Decimal.valueOf(String.valueOf(boundingBox.get('minX')));
+                // Decimal minY = Decimal(boundingBox.get('minY'));
+                // Decimal maxX = Decimal(boundingBox.get('minX'));
+                // Decimal maxY = Decimal(boundingBox.get('maxY'));
+                
+                // if(p.inRectangle(minX, maxY, minY, maxX))
+                // {
+                //     response.add((String) probability.get('label'));
+                // }
+                
+            }
+        }
+
+        System.debug(response);
+        
+               
+
+        return response;
+    }
+
+
 }

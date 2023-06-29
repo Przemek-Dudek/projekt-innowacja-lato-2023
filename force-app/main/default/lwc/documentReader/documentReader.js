@@ -24,13 +24,6 @@ export default class AnimalSearcher extends LightningElement {
                 .then(result => {
                     const parsedResponse = JSON.parse(result);
                     console.log(parsedResponse)
-                    const label = parsedResponse.probabilities[0].label;
-                    const replacedLabel = label.replace(/_/g, " ");
-                    this.breedOptions.push({ label: String(replacedLabel), value: String(replacedLabel)})
-
-                    this.breed = String(replacedLabel)
-                    
-                    this.filterAnimals()
                 })
                 .catch(error => {
                     console.log(error)

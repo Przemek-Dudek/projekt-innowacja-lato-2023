@@ -75,8 +75,6 @@ export default class AnimalSearcher extends LightningElement {
                 variant: 'success'
             });
             this.dispatchEvent(showToastEvent);
-            getBreedFromPhoto({ base64: base64 })
-
 
             getBreedFromPhoto({fromUrl: false, base64: base64 })
                 .then(result => {

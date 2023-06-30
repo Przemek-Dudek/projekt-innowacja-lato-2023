@@ -5,8 +5,8 @@
         <lightning-input label="Imię" value={firstName} onchange={handleFirstNameChange}></lightning-input>
         <lightning-input label="Nazwisko" value={lastName} onchange={handleLastNameChange}></lightning-input>
         <lightning-input label="Adres e-mail" value={email} onchange={handleEmailChange}></lightning-input>
-        <lightning-input label="Schronisko" value={shelter} onchange={handleShelterChange}></lightning-input>
-        <lightning-input label="Data adopcji" type="date" value={adoptionDate} onchange={handleAdoptionDateChange}></lightning-input>
+        <!-- <lightning-input label="Schronisko" value={shelter} onchange={handleShelterChange}></lightning-input> -->
+        <lightning-combobox name="shelter" label="Shelter" value={shelter} placeholder="Select Shelter" options={shelters} onchange={handleShelterChange}> </lightning-combobox>
         <lightning-button variant="brand" label="Generuj PDF" onclick={generateData}></lightning-button>
       </div>
     </lightning-card>

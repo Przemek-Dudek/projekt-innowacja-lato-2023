@@ -60,8 +60,6 @@ public class EinsteinTokenGenerator {
         req.setHeader('Content-Type', 'application/x-www-form-urlencoded');
     
         String jwt = generateJWT();
-        //String jwt = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqc3RlbXBuaWFrQGNyYWZ0d2FyZS5iaXoiLCJhdWQiOiJodHRwczovL2FwaS5laW5zdGVpbi5haS92Mi9vYXV0aDIvdG9rZW4iLCJleHAiOjE2ODc3OTk1ODl9.W3w9J6CZm9I1NKwNrKMMgvKF-uDzmHqMjshTk8a7Y00iN6r1OFBclG7RT1WuKo4UYJx4K_OPtd5yaR-0fymNE9CYAQgkpJVHKdzrD7o7yqg_9crdvQj50k-a4FdEb44MVPIK_ZJ3f7A8pe9s-K3LBUTvx8Mo_tgn8cGY4vt2pNjNeWOFBp5oY7X3PQktwp_TabxgCvTgS64LJ5K7DHPcdjdDbBhS-fq8iRS09S1G9b3aiL9KIsj_DTeAgYMoy9WA1kPzN-0bNOf7OTfSrsE622q-TXmOqijDVuIb_1J2fFJ3xfzGwel02c8yj430YzWUDUvonNgV8-50PyeDDdzGBg'; 
-        //System.debug('jwt: ' + jwt);
         String requestBody = 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' + jwt;
     
         req.setBody(requestBody);
@@ -147,7 +145,7 @@ public class EinsteinTokenGenerator {
         return breed;
     }
 
-    @AuraEnabled
+
     public static List<String> readDocument(Boolean isID, String base64)
     {
         String token = generateAccessToken();
@@ -163,6 +161,7 @@ public class EinsteinTokenGenerator {
         } 
         else
         {
+
             points.add(new Point(140,110,'AnimalName'));
             points.add(new Point(133,138,'Name'));
             points.add(new Point(133,165,'LastName'));
@@ -194,7 +193,6 @@ public class EinsteinTokenGenerator {
         }
         
 
-       // System.debug(res.getBody());
         Map<String, Object> data = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
 
         Map<String, Object> boundingBox = new Map<String, Object>();
@@ -213,8 +211,6 @@ public class EinsteinTokenGenerator {
                 Decimal minY = Decimal.valueOf(String.valueOf(boundingBox.get('minY')));
                 Decimal maxX = Decimal.valueOf(String.valueOf(boundingBox.get('maxX')));
                 Decimal maxY = Decimal.valueOf(String.valueOf(boundingBox.get('maxY')));
-
-                //System.debug('minX = '+minX+' minY = ' +minY + ' maxX = '+maxX+ ' maxY = '+maxY + ' Label ='+ String.valueOf(probability.get('label')));
 
                 
                 if(p.inRectangle(maxY, minY, minX, maxX)) {
@@ -280,5 +276,6 @@ public class EinsteinTokenGenerator {
         return 'male';
     }
 }
+
 
 }

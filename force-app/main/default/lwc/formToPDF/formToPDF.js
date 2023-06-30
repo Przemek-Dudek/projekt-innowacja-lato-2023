@@ -67,7 +67,6 @@ export default class Form extends LightningElement {
     }
 
 
-  //loading script
   jsPdfInitialized=false;
   renderedCallback(){
       loadScript(this, jsPDF ).then(() => {});

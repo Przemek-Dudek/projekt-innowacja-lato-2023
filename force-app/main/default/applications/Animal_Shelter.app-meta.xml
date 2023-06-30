@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#58E724</headerColor>
+        <logo>images</logo>
+        <logoVersion>1</logoVersion>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <formFactors>Small</formFactors>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <label>Animal Shelter</label>
+    <navType>Standard</navType>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Shelter_Record_Page</content>
+        <formFactor>Small</formFactor>
+        <pageOrSobjectType>Shelter__c</pageOrSobjectType>
+        <type>Flexipage</type>
+        <profile>Admin</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Shelter_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Shelter__c</pageOrSobjectType>
+        <type>Flexipage</type>
+        <profile>Admin</profile>
+    </profileActionOverrides>
+    <tabs>Shelter_App_Page</tabs>
+    <tabs>Animal_Searcher</tabs>
+    <tabs>Missing_Animals</tabs>
+    <tabs>Shelter__c</tabs>
+    <tabs>Animal__c</tabs>
+    <tabs>Adoption__c</tabs>
+    <tabs>Person__c</tabs>
+    <tabs>Notification__c</tabs>
+    <tabs>standard-report</tabs>
+    <tabs>standard-Dashboard</tabs>
+    <uiType>Lightning</uiType>
+    <utilityBar>animal_shelter_app_UtilityBar</utilityBar>
+</CustomApplication>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Date_of_missing_rule</fullName>
+    <active>true</active>
+    <errorConditionFormula>DATEVALUE(NOW()) &lt;  Date_of_missing__c</errorConditionFormula>
+    <errorDisplayField>Place_of_missing__c</errorDisplayField>
+    <errorMessage>Date of missing cannot be greater than current date</errorMessage>
+</ValidationRule>
